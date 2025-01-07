@@ -44,6 +44,11 @@ cp /usr/share/peass/winpeas/winPEAS.bat "$HOME/Pentesting/scripts/windows/"
 cp /usr/share/peass/winpeas/winPEASx64.exe "$HOME/Pentesting/scripts/windows/"
 cp /usr/share/peass/winpeas/winPEASx86.exe "$HOME/Pentesting/scripts/windows/"
 
+sudo cp githubdorker /usr/bin
+sudo cp googledorker /usr/bin
+sudo cp network-scanner /usr/bin
+sudo cp vhost-fuzzer /usr/bin
+
 ## Download other tools on github
 install_rustscan() {
 	# Download latest rustscan
@@ -91,7 +96,7 @@ install_dalfox() {
 }
 
 install_waybackurls() {
-	# Download latest dalfox
+	# Download latest waybackurls
 	LATEST_WAYBACKURLS_RELEASE_URL=$(curl -s "https://api.github.com/repos/tomnomnom/waybackurls/releases/latest" | grep "browser_download_url" | grep "linux-amd64" | grep ".tgz" | cut -d '"' -f 4)
 	FILE_NAME=$(basename "$LATEST_WAYBACKURLS_RELEASE_URL")
 
@@ -105,7 +110,7 @@ install_waybackurls() {
 	elif command -v curl &> /dev/null; then
 		curl -L --progress-bar -O "$LATEST_WAYBACKURLS_RELEASE_URL"
 	else
-		echo "Error. Could not download dalfox."
+		echo "Error. Could not download waybackurls."
 		exit 1
 	fi
 
