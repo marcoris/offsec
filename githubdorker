@@ -1,3 +1,44 @@
 #!/bin/bash
 
-# Github dorking tool
+echo "GitHub Dorker - Generate GitHub search queries"
+echo "---------------------------------------------"
+
+read -p "Enter the GitHub username: " github_user
+read -p "Enter file extensions to search for (e.g., php txt json): " -a extensions
+
+echo "Select the search type (enter the number):"
+echo "1) code"
+echo "2) repositories"
+echo "3) issues"
+echo "4) pullrequests"
+echo "5) discussions"
+echo "6) registrypackages"
+read -p "Your choice: " search_type_choice
+
+case $search_type_choice in
+    1) search_type="code";;
+    2) search_type="repositories";;
+    3) search_type="issues";;
+    4) search_type="pullrequests";;
+    5) search_type="discussions";;
+    6) search_type="registrypackages";;
+    *) echo "Invalid choice, defaulting to 'code'"; search_type="code";;
+esac
+
+base_url="https://github.com/search?q="
+
+path_filter=""
+for ext in "${extensions[@]}"; do
+    if [ -z "$path_filter" ]; then
+        path_filter="path:*.${ext}"
+    else
+        path_filter="${path_filter}+OR+path:*.${ext}"
+    fi
+done
+
+combined_query="user:${github_user} (${path_filter})"
+encoded_query=$(echo "$combined_query" | sed 's/ /+/g' | sed 's/:/%3A/g' | sed 's/(/%28/g' | sed 's/)/%29/g')
+search_url="${base_url}${encoded_query}&type=${search_type}"
+
+echo "Generated GitHub Search URL:"
+echo "$search_url"
