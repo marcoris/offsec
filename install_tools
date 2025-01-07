@@ -6,6 +6,7 @@ sudo apt update
 ## Install tools
 tools_list=(
 	docker.io
+	peass
 )
 
 for tool in "${tools_list[@]}"; do
@@ -27,11 +28,14 @@ done
 chmod +x create_folders.sh
 ./create_folders.sh
 
-# Download scripts like linpeas
+# Download scripts
 
 
 # Copy script in created folder
-
+cp /usr/share/peass/linpeas/linpeas.sh "$HOME/Pentesting/scripts/linux/bash/"
+cp /usr/share/peass/winpeas/winPEAS.bat "$HOME/Pentesting/scripts/windows/"
+cp /usr/share/peass/winpeas/winPEASx64.exe "$HOME/Pentesting/scripts/windows/"
+cp /usr/share/peass/winpeas/winPEASx86.exe "$HOME/Pentesting/scripts/windows/"
 
 ## Download other tools on github
 # Download latest rustscan
@@ -53,6 +57,7 @@ fi
 
 tools_to_copy=(
 	rustscan
+	network-scanner
 )
 
 # Copy the binaries in /user/bin directory
