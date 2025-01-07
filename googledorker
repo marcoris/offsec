@@ -1,3 +1,33 @@
 #!/bin/bash
 
-# Google dorking tool
+# Greeting
+echo "Google Dorker - Creation of prioritized Google Dork URLs"
+echo "-------------------------------------------------------"
+
+# Input for the base query or URL
+read -p "Enter the URL or search term (e.g., example.com): " base_query
+
+# Input for prioritized dorks (site:, inurl:, intitle:) – user provides these
+read -p "Enter prioritized dorks (e.g., site:, inurl:, intitle:) - separated by spaces: " -a priority_dorks
+
+# Input for additional dorks (e.g., ext:, filetype:, etc.)
+read -p "Enter additional dorks (e.g., ext:, filetype:) - separated by spaces: " -a additional_dorks
+
+# Generate the loop for complete search queries
+echo "Generated Google search URLs:"
+for priority_dork in "${priority_dorks[@]}"; do
+    # Combine prioritized dork with the base query
+    base_combined_query="${priority_dork}:${base_query}"
+
+    for additional_dork in "${additional_dorks[@]}"; do
+        # Combine additional dork with the prioritized combination
+        full_query="${base_combined_query} ${additional_dork}"
+
+        # URL-encoded query
+        encoded_query=$(echo "$full_query" | sed 's/ /+/g')
+
+        # Create the search URL and output it
+        search_url="https://www.google.com/search?q=${encoded_query}"
+        echo "$search_url"
+    done
+done
