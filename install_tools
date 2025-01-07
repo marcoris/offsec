@@ -4,29 +4,59 @@
 sudo apt update
 
 ## Install tools
-
 tools_list=(
-  docker.io
+	docker.io
 )
 
 for tool in "${tools_list[@]}"; do
-  echo "Installiere $tool ..."
-  sudo apt install "$tool" -y
-  if [[ $? -eq 0 ]]; then
-    echo "$tool was installed."
-  else
-    echo "There was an error by the installation of $tool."
-  fi
+	if ! command -v "$tool" &>/dev/null; then
+		echo "$tool is not installed."
+		echo "Installing $tool ..."
+		sudo apt install "$tool" -y
+		if [[ $? -eq 0 ]]; then
+			echo "$tool was installed."
+		else
+			echo "There was an error by the installation of $tool."
+		fi
+	else
+		echo "$tool is already installed"
+	fi
 done
+
+# Create necessary folders
+chmod +x create_folders.sh
+./create_folders.sh
+
+# Download scripts like linpeas
+
+
+# Copy script in created folder
 
 
 ## Download other tools on github
 # Download latest rustscan
-LATEST_RELEASE_URL=$(curl -s "https://api.github.com/repos/RustScan/RustScan/releases/latest" | grep "browser_download_url" | cut -d '"' -f 4)
+LATEST_RELEASE_URL=$(curl -s "https://api.github.com/repos/RustScan/RustScan/releases/latest" | grep -m 1 "browser_download_url" | cut -d '"' -f 4)
 
 if [[ -z "$LATEST_RELEASE_URL" ]]; then
     echo "Error: Download-Link was not found!"
     exit 1
 fi
 
-wget -q --show-progress "$LATEST_RELEASE_URL"
+if command -v wget &> /dev/null; then
+	wget -q --show-progress "$LATEST_RELEASE_URL"
+elif command -v curl &> /dev/null; then
+	curl -L --progress-bar -O "$LATEST_RELEASE_URL"
+else
+	echo "Error. Could not download rustscan."
+	exit 1
+fi
+
+tools_to_copy=(
+	rustscan
+)
+
+# Copy the binaries in /user/bin directory
+for tool in "${tools_to_copy[@]}"; do
+	sudo cp rustscan /usr/bin/"$tool"
+	sudo chmod +x /usr/bin/"$tool"
+done
