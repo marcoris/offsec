@@ -10,4 +10,6 @@ git clone https://github.com/marcoris/offsectools.git && cd offsectools
 ```
 
 ## Install tools
+```
 sudo ./install_tools.sh
+```
