@@ -1,5 +1,11 @@
 #!/bin/bash
 
+RED="\e[31m"
+GREEN="\e[32m"
+BLUE="\e[36m"
+NC="\e[0m"
+
+echo -e "${BLUE}[i]${NC} Updating apt..."
 sudo apt update
 
 # Install tools
@@ -17,16 +23,16 @@ tools_list=(
 
 for tool in "${tools_list[@]}"; do
 	if ! command -v "$tool" &>/dev/null; then
-		echo "$tool is not installed."
-		echo "Installing $tool ..."
+		echo -e "${BLUE}[i]${NC} $tool is not installed."
+		echo -e "${BLUE}[*]${NC} Installing $tool ..."
 		sudo apt install "$tool" -y
 		if [[ $? -eq 0 ]]; then
-			echo "$tool was installed."
+			echo -e "${GREEN}[+]${NC} $tool was installed."
 		else
-			echo "There was an error by the installation of $tool."
+			echo -e "${RED}[!]${NC} There was an error by the installation of $tool."
 		fi
 	else
-		echo "$tool is already installed"
+		echo -e "${BLUE}[i]${NC} $tool is already installed"
 	fi
 done
 
@@ -36,12 +42,14 @@ done
 # Download scripts
 # Coming soon
 
-# Copy script in created folder
+# Copy scripts/binaries in created folder
+echo -e "${BLUE}[*]${NC} Copying scripts/binaries..."
 cp /usr/share/peass/linpeas/linpeas.sh "$HOME/Pentesting/scripts/linux/bash/"
 cp /usr/share/peass/winpeas/winPEAS.bat "$HOME/Pentesting/scripts/windows/"
 cp /usr/share/peass/winpeas/winPEASx64.exe "$HOME/Pentesting/scripts/windows/"
 cp /usr/share/peass/winpeas/winPEASx86.exe "$HOME/Pentesting/scripts/windows/"
 
+echo -e "${BLUE}[*]${NC} Copying binaries..."
 sudo chmod +x githubdorker && cp githubdorker /usr/bin
 sudo chmod +x googledorker && cp googledorker /usr/bin
 sudo chmod +x network-scanner && cp network-scanner /usr/bin
@@ -53,21 +61,29 @@ install_rustscan() {
 	LATEST_RUSTSCAN_RELEASE_URL=$(curl -s "https://api.github.com/repos/RustScan/RustScan/releases/latest" | grep -m 1 "browser_download_url" | cut -d '"' -f 4)
 
 	if [[ -z "$LATEST_RUSTSCAN_RELEASE_URL" ]]; then
-		echo "Error: Download-Link was not found!"
+		echo -e "${RED}[!]${NC} Download-Link was not found!"
 		exit 1
 	fi
-
+ 
+	echo -e "${BLUE}[*]${NC} Downloading rustscan..."
 	if command -v wget &> /dev/null; then
 		wget -q --show-progress "$LATEST_RUSTSCAN_RELEASE_URL"
 	elif command -v curl &> /dev/null; then
 		curl -L --progress-bar -O "$LATEST_RUSTSCAN_RELEASE_URL"
 	else
-		echo "Error. Could not download rustscan."
+		echo -e "${RED}[!]${NC} Could not download rustscan."
 		exit 1
 	fi
-
+ 
+	echo -e "${BLUE}[*]${NC} Installing rustscan..."
 	sudo chmod +x rustscan && cp rustscan /usr/bin/
  	rm rustscan
+  
+  	if command -v rustscan &>/dev/null; then
+   		echo -e "${GREEN}[+]${NC} rustscan is installed!"
+   	else
+    		echo -e "${RED}[!]${NC} rustscan could not be installed!"
+  	fi
 }
 
 install_dalfox() {
@@ -76,22 +92,29 @@ install_dalfox() {
 	FILE_NAME=$(basename "$LATEST_DALFOX_RELEASE_URL")
 
 	if [[ -z "$LATEST_DALFOX_RELEASE_URL" ]]; then
-		echo "Error: Download-Link was not found!"
+		echo -e "${RED}[!]${NC} Download-Link was not found!"
 		exit 1
 	fi
-
+	echo -e "${BLUE}[i]${NC} Downloading dalfox..."
 	if command -v wget &> /dev/null; then
 		wget -q --show-progress "$LATEST_DALFOX_RELEASE_URL"
 	elif command -v curl &> /dev/null; then
 		curl -L --progress-bar -O "$LATEST_DALFOX_RELEASE_URL"
 	else
-		echo "Error. Could not download dalfox."
+		echo -e "${RED}[!]${NC} Could not download dalfox."
 		exit 1
 	fi
 
+	echo -e "${BLUE}[i]${NC} Installing dalfox..."
 	tar -xzf "$FILE_NAME"
 	sudo chmod +x dalfox && cp dalfox /usr/bin
 	rm "$FILE_NAME" dalfox LICENSE.txt README.md
+ 
+ 	if command -v dalfox &>/dev/null; then
+   		echo -e "${GREEN}[+]${NC} dalfox is installed!"
+   	else
+    		echo -e "${RED}[!]${NC} dalfox could not be installed!"
+  	fi
 }
 
 install_waybackurls() {
@@ -100,22 +123,29 @@ install_waybackurls() {
 	FILE_NAME=$(basename "$LATEST_WAYBACKURLS_RELEASE_URL")
 
 	if [[ -z "$LATEST_WAYBACKURLS_RELEASE_URL" ]]; then
-		echo "Error: Download-Link was not found!"
+		echo -e "${RED}[!]${NC} Download-Link was not found!"
 		exit 1
 	fi
-
+	echo -e "${BLUE}[i]${NC} Downloading waybackurls..."
 	if command -v wget &> /dev/null; then
 		wget -q --show-progress "$LATEST_WAYBACKURLS_RELEASE_URL"
 	elif command -v curl &> /dev/null; then
 		curl -L --progress-bar -O "$LATEST_WAYBACKURLS_RELEASE_URL"
 	else
-		echo "Error. Could not download waybackurls."
+		echo -e "${RED}[!]${NC} Could not download waybackurls."
 		exit 1
 	fi
 
+	echo -e "${BLUE}[i]${NC} Installing waybackurls..."
 	tar -xzf "$FILE_NAME"
 	sudo chmod +x waybackurls && cp waybackurls /usr/bin
 	rm "$FILE_NAME" waybackurls
+
+ 	if command -v waybackurls &>/dev/null; then
+   		echo -e "${GREEN}[+]${NC} waybackurls is installed!"
+   	else
+    		echo -e "${RED}[!]${NC} waybackurls could not be installed!"
+  	fi
 }
 
 install_rustscan
