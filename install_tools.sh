@@ -59,14 +59,15 @@ sudo chmod +x vhost-fuzzer && cp vhost-fuzzer /usr/bin
 ## Download other tools on github
 install_rustscan() {
 	# Download latest rustscan
-	LATEST_RUSTSCAN_RELEASE_URL=$(curl -s "https://api.github.com/repos/RustScan/RustScan/releases/latest" | grep -m 1 "browser_download_url" | cut -d '"' -f 4)
+	LATEST_RUSTSCAN_RELEASE_URL=$(curl -s "https://api.github.com/repos/RustScan/RustScan/releases/latest" | grep "browser_download_url" | grep "amd64.deb" | cut -d '"' -f 4)
+	FILE_NAME=$(basename "$LATEST_RUSTSCAN_RELEASE_URL")
 
 	if [[ -z "$LATEST_RUSTSCAN_RELEASE_URL" ]]; then
 		echo -e "${RED}[!]${NC} Download-Link was not found!"
 		exit 1
 	fi
  
-	echo -e "${MAGENTA}[*]${NC} Downloading rustscan..."
+	echo -e "${BLUE}[*]${NC} Downloading rustscan..."
 	if command -v wget &> /dev/null; then
 		wget -q --show-progress "$LATEST_RUSTSCAN_RELEASE_URL"
 	elif command -v curl &> /dev/null; then
@@ -76,9 +77,9 @@ install_rustscan() {
 		exit 1
 	fi
  
-	echo -e "${MAGENTA}[*]${NC} Installing rustscan..."
-	sudo chmod +x rustscan && cp rustscan /usr/bin/
- 	rm rustscan
+	echo -e "${BLUE}[*]${NC} Installing rustscan..."
+	sudo dpkg -i "$FILE_NAME"
+	sudo rm "$FILE_NAME"
   
   	if command -v rustscan &>/dev/null; then
    		echo -e "${GREEN}[+]${NC} rustscan is installed!"
