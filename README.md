@@ -11,5 +11,5 @@ git clone https://github.com/marcoris/offsectools.git && cd offsectools
 
 ## Install tools
 ```
-chmod +x install_tools.sh && sudo ./install_tools.sh
+sudo ./install_tools.sh
 ```
