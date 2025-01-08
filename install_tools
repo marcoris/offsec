@@ -1,9 +1,8 @@
 #!/bin/bash
 
-# Installs necessary tools
 sudo apt update
 
-## Install tools
+# Install tools
 tools_list=(
 	assetfinder
 	docker.io
@@ -36,7 +35,7 @@ chmod +x create_folders.sh
 ./create_folders.sh
 
 # Download scripts
-
+# Coming soon
 
 # Copy script in created folder
 cp /usr/share/peass/linpeas/linpeas.sh "$HOME/Pentesting/scripts/linux/bash/"
