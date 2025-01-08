@@ -31,7 +31,6 @@ for tool in "${tools_list[@]}"; do
 done
 
 # Create necessary folders
-chmod +x create_folders.sh
 ./create_folders.sh
 
 # Download scripts
