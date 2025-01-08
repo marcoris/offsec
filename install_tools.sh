@@ -2,6 +2,7 @@
 
 RED="\e[31m"
 GREEN="\e[32m"
+MAGENTA="\e[35m"
 BLUE="\e[36m"
 NC="\e[0m"
 
@@ -24,7 +25,7 @@ tools_list=(
 for tool in "${tools_list[@]}"; do
 	if ! command -v "$tool" &>/dev/null; then
 		echo -e "${BLUE}[i]${NC} $tool is not installed."
-		echo -e "${BLUE}[*]${NC} Installing $tool ..."
+		echo -e "${MAGENTA}[*]${NC} Installing $tool ..."
 		sudo apt install "$tool" -y
 		if [[ $? -eq 0 ]]; then
 			echo -e "${GREEN}[+]${NC} $tool was installed."
@@ -43,13 +44,13 @@ done
 # Coming soon
 
 # Copy scripts/binaries in created folder
-echo -e "${BLUE}[*]${NC} Copying scripts/binaries..."
+echo -e "${MAGENTA}[*]${NC} Copying scripts/binaries..."
 cp /usr/share/peass/linpeas/linpeas.sh "$HOME/Pentesting/scripts/linux/bash/"
 cp /usr/share/peass/winpeas/winPEAS.bat "$HOME/Pentesting/scripts/windows/"
 cp /usr/share/peass/winpeas/winPEASx64.exe "$HOME/Pentesting/scripts/windows/"
 cp /usr/share/peass/winpeas/winPEASx86.exe "$HOME/Pentesting/scripts/windows/"
 
-echo -e "${BLUE}[*]${NC} Copying binaries..."
+echo -e "${MAGENTA}[*]${NC} Copying binaries..."
 sudo chmod +x githubdorker && cp githubdorker /usr/bin
 sudo chmod +x googledorker && cp googledorker /usr/bin
 sudo chmod +x network-scanner && cp network-scanner /usr/bin
@@ -65,7 +66,7 @@ install_rustscan() {
 		exit 1
 	fi
  
-	echo -e "${BLUE}[*]${NC} Downloading rustscan..."
+	echo -e "${MAGENTA}[*]${NC} Downloading rustscan..."
 	if command -v wget &> /dev/null; then
 		wget -q --show-progress "$LATEST_RUSTSCAN_RELEASE_URL"
 	elif command -v curl &> /dev/null; then
@@ -75,7 +76,7 @@ install_rustscan() {
 		exit 1
 	fi
  
-	echo -e "${BLUE}[*]${NC} Installing rustscan..."
+	echo -e "${MAGENTA}[*]${NC} Installing rustscan..."
 	sudo chmod +x rustscan && cp rustscan /usr/bin/
  	rm rustscan
   
@@ -95,7 +96,7 @@ install_dalfox() {
 		echo -e "${RED}[!]${NC} Download-Link was not found!"
 		exit 1
 	fi
-	echo -e "${BLUE}[i]${NC} Downloading dalfox..."
+	echo -e "${MAGENTA}[*]${NC} Downloading dalfox..."
 	if command -v wget &> /dev/null; then
 		wget -q --show-progress "$LATEST_DALFOX_RELEASE_URL"
 	elif command -v curl &> /dev/null; then
@@ -105,7 +106,7 @@ install_dalfox() {
 		exit 1
 	fi
 
-	echo -e "${BLUE}[i]${NC} Installing dalfox..."
+	echo -e "${MAGENTA}[*]${NC} Installing dalfox..."
 	tar -xzf "$FILE_NAME"
 	sudo chmod +x dalfox && cp dalfox /usr/bin
 	rm "$FILE_NAME" dalfox LICENSE.txt README.md
@@ -126,7 +127,7 @@ install_waybackurls() {
 		echo -e "${RED}[!]${NC} Download-Link was not found!"
 		exit 1
 	fi
-	echo -e "${BLUE}[i]${NC} Downloading waybackurls..."
+	echo -e "${MAGENTA}[*]${NC} Downloading waybackurls..."
 	if command -v wget &> /dev/null; then
 		wget -q --show-progress "$LATEST_WAYBACKURLS_RELEASE_URL"
 	elif command -v curl &> /dev/null; then
@@ -136,7 +137,7 @@ install_waybackurls() {
 		exit 1
 	fi
 
-	echo -e "${BLUE}[i]${NC} Installing waybackurls..."
+	echo -e "${MAGENTA}[*]${NC} Installing waybackurls..."
 	tar -xzf "$FILE_NAME"
 	sudo chmod +x waybackurls && cp waybackurls /usr/bin
 	rm "$FILE_NAME" waybackurls
