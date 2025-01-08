@@ -66,7 +66,7 @@ install_rustscan() {
 		exit 1
 	fi
 
-	sudo cp rustscan /usr/bin/
+	sudo chmod +x rustscan && cp rustscan /usr/bin/
  	rm rustscan
 }
 
