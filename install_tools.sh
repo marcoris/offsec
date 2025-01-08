@@ -42,10 +42,10 @@ cp /usr/share/peass/winpeas/winPEAS.bat "$HOME/Pentesting/scripts/windows/"
 cp /usr/share/peass/winpeas/winPEASx64.exe "$HOME/Pentesting/scripts/windows/"
 cp /usr/share/peass/winpeas/winPEASx86.exe "$HOME/Pentesting/scripts/windows/"
 
-sudo cp githubdorker /usr/bin
-sudo cp googledorker /usr/bin
-sudo cp network-scanner /usr/bin
-sudo cp vhost-fuzzer /usr/bin
+sudo chmod +x githubdorker && cp githubdorker /usr/bin
+sudo chmod +x googledorker && cp googledorker /usr/bin
+sudo chmod +x network-scanner && cp network-scanner /usr/bin
+sudo chmod +x vhost-fuzzer && cp vhost-fuzzer /usr/bin
 
 ## Download other tools on github
 install_rustscan() {
@@ -67,6 +67,7 @@ install_rustscan() {
 	fi
 
 	sudo cp rustscan /usr/bin/
+ 	rm rustscan
 }
 
 install_dalfox() {
@@ -89,7 +90,7 @@ install_dalfox() {
 	fi
 
 	tar -xzf "$FILE_NAME"
-	sudo cp dalfox /usr/bin
+	sudo chmod +x dalfox && cp dalfox /usr/bin
 	rm "$FILE_NAME" dalfox LICENSE.txt README.md
 }
 
@@ -113,7 +114,7 @@ install_waybackurls() {
 	fi
 
 	tar -xzf "$FILE_NAME"
-	sudo cp waybackurls /usr/bin
+	sudo chmod +x waybackurls && cp waybackurls /usr/bin
 	rm "$FILE_NAME" waybackurls
 }
 
