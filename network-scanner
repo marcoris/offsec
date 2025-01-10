@@ -32,7 +32,7 @@ select opt in "${options[@]}"; do
     case $REPLY in
         1) 
             echo "Running RustScan for initial port scan..."
-            ports=$(rustscan -a "$target" --range 1-65535 -g | grep -oP '\d+(?=\])')
+            ports=$(rustscan -a "$target" --range 1-65535 -g | awk -F'[][]' '{print $2}' | tr ',' '\n' | sort -n | tr '\n' ',' | sed 's/,$//')
             echo "Detected open ports: $ports"
             echo "Running Nmap on detected ports..."
             nmap -A -p "$ports" "$target"
@@ -40,7 +40,7 @@ select opt in "${options[@]}"; do
             ;;
         2)
             echo "Running RustScan for initial port scan..."
-            ports=$(rustscan -a "$target" --range 1-65535 -g | grep -oP '\d+(?=\])')
+            ports=$(rustscan -a "$target" --range 1-65535 -g | awk -F'[][]' '{print $2}' | tr ',' '\n' | sort -n | tr '\n' ',' | sed 's/,$//')
             echo "Detected open ports: $ports"
             echo "Running Nmap vulnerability scan on detected ports..."
             nmap -p "$ports" --script=vuln "$target"
@@ -48,7 +48,7 @@ select opt in "${options[@]}"; do
             ;;
         3)
             echo "Running RustScan for initial port scan..."
-            ports=$(rustscan -a "$target" --range 1-65535 -g | grep -oP '\d+(?=\])')
+            ports=$(rustscan -a "$target" --range 1-65535 -g | awk -F'[][]' '{print $2}' | tr ',' '\n' | sort -n | tr '\n' ',' | sed 's/,$//')
             echo "Detected open ports: $ports"
             echo "Running combined Nmap scan on detected ports..."
             nmap -A -p "$ports" --script=vuln "$target"
