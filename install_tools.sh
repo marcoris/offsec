@@ -40,9 +40,6 @@ done
 # Create necessary folders
 ./create_folders.sh
 
-# Download scripts
-# Coming soon
-
 # Copy scripts/binaries in created folder
 echo -e "${MAGENTA}[*]${NC} Copying scripts/binaries..."
 cp /usr/share/peass/linpeas/linpeas.sh "$HOME/Pentesting/scripts/linux/bash/"
@@ -51,12 +48,20 @@ cp /usr/share/peass/winpeas/winPEASx64.exe "$HOME/Pentesting/scripts/windows/"
 cp /usr/share/peass/winpeas/winPEASx86.exe "$HOME/Pentesting/scripts/windows/"
 
 echo -e "${MAGENTA}[*]${NC} Copying binaries..."
-sudo chmod +x githubdorker && cp githubdorker /usr/bin
-sudo chmod +x googledorker && cp googledorker /usr/bin
-sudo chmod +x network-scanner && cp network-scanner /usr/bin
-sudo chmod +x vhost-fuzzer && cp vhost-fuzzer /usr/bin
 
-## Download other tools on github
+scripts_list=(
+	githubdorker
+	googledorker
+	update-hosts
+	network-scanner
+	vhost-fuzzer
+)
+
+for tool in "${scripts_list[@]}"; do
+	sudo chmod +x "$tool" && cp "$tool" /usr/bin
+done
+
+# Download other tools on github
 install_rustscan() {
 	# Download latest rustscan
 	LATEST_RUSTSCAN_RELEASE_URL=$(curl -s "https://api.github.com/repos/RustScan/RustScan/releases/latest" | grep "browser_download_url" | grep "amd64.deb" | cut -d '"' -f 4)
