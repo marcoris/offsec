@@ -1,17 +1,27 @@
 #!/bin/bash
 
-if [ $# -ne 2 ]; then
-    echo "Usage: $0 <IP> <Domain>"
-    exit 1
-fi
+set_hosts() {
+    local hostname="$1"    # Hostname/Domain
+    local target_ip="$target"  # IP-Adresse aus der Umgebungsvariable
 
-target=$1
-domain=$2
+    if [[ -z "$target_ip" || -z "$hostname" ]]; then
+        echo "Error: target IP is not set or Hostname is missing."
+        echo "Usage: set-hosts <hostname>"
+        return 1
+    fi
 
-if grep -q "$domain" /etc/hosts; then
-    sudo sed -i "s/^[^#]*\b$domain\b.*/$target $domain/" /etc/hosts
-    echo "IP for $domain was reset"
+    if grep -qE "^\s*$target_ip\s+$hostname" /etc/hosts; then
+        echo "[*] Entry for $target_ip $hostname already exists."
+    else
+        echo "[*] Put $target_ip $hostname to /etc/hosts..."
+        echo "$target_ip $hostname" | sudo tee -a /etc/hosts > /dev/null
+        echo "[+] Entry added: $target_ip $hostname"
+    fi
+}
+
+if [[ "$#" -eq 1 ]]; then
+    set_hosts "$1"
 else
-    echo "$target $domain" | sudo tee -a /etc/hosts > /dev/null
-    echo "New entry for $domain with IP $target"
+    echo "Usage: $0 <hostname>"
+    exit 1
 fi
