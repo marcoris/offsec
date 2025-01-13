@@ -1,26 +1,35 @@
 #!/bin/bash
 
-set_hosts() {
-    local hostname="$1"    # Hostname/Domain
-    local target_ip="$target"  # IP-Adresse aus der Umgebungsvariable
+update_hosts() {
+    local hostname="$1"
+    local target_ip="$target"
+    local hosts_file="/etc/hosts"
 
-    if [[ -z "$target_ip" || -z "$hostname" ]]; then
-        echo "Error: target IP is not set or Hostname is missing."
-        echo "Usage: set-hosts <hostname>"
+
+    if [[ -z "$target_ip" || ! "$target_ip" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+        echo "Error: target IP is not set or invalid. Set the 'target' environment variable."
         return 1
     fi
 
-    if grep -qE "^\s*$target_ip\s+$hostname" /etc/hosts; then
-        echo "[*] Entry for $target_ip $hostname already exists."
+    if [[ -z "$hostname" ]]; then
+        echo "Error: Hostname is missing."
+        echo "Usage: update-hosts <hostname>"
+        return 1
+    fi
+
+    if grep -qP "^\s*[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+\s+.*\b$hostname\b" "$hosts_file"; then
+        echo "[*] Updating IP for $hostname to $target_ip..."
+        sudo sed -i -E "s|^([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)(\s+.*\b$hostname\b.*$)|$target_ip\2|" "$hosts_file"
+        echo "[+] Updated: $hostname now points to $target_ip."
     else
-        echo "[*] Put $target_ip $hostname to /etc/hosts..."
-        echo "$target_ip $hostname" | sudo tee -a /etc/hosts > /dev/null
-        echo "[+] Entry added: $target_ip $hostname"
+        echo "[*] Adding new entry for $target_ip $hostname..."
+        echo -e "$target_ip\t$hostname" | sudo tee -a "$hosts_file" > /dev/null
+        echo "[+] Added: $target_ip $hostname."
     fi
 }
 
 if [[ "$#" -eq 1 ]]; then
-    set_hosts "$1"
+    update_hosts "$1"
 else
     echo "Usage: $0 <hostname>"
     exit 1
