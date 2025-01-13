@@ -53,7 +53,6 @@ scripts_list=(
 	githubdorker
 	googledorker
 	update-hosts
-	network-scanner
 	vhost-fuzzer
 )
 
